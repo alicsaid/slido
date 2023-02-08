@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/index.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="stylesheets/general.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <script>
+      function validateForm() {
+        //let x = document.forms["myForm"]["code"].value;
+        let x = document.getElementById('code').value;
+        //console.info(x)
+        if (x.length === 6) {
+          window.location = `http://localhost:3000/event/${x}`;
+        } else {
+          alert('Code must be 6 digits long!')
+        }
+      }
+    </script>
+  </head>
+  <body>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a style="color: #115402; font-weight: bold" class="navbar-brand" href="http://localhost:3000">slido</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="http://localhost:3000">HOME</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <a href="http://localhost:3000/login/instructor-login"><button class="btn btn-outline-primary btn-block-custom" type="button">Login</button></a>
+              <a href="http://localhost:3000/register"><button style="margin: 0 10px 0 10px" class="btn btn-outline-primary btn-block-custom" type="button">Register</button></a>
+            </form>
+          </div>
+        </div>
+      </nav> <!--Navbar -->
+      <div id="main">
+        <h1>WELCOME TO SLIDO</h1><br><br>
+        <h3><b>Slido</b> is an application that will help the audience interact during lectures, <br>
+          conferences and other similar events.</h3>
+        <form name="myForm" id="join">
+          <label for="code">JOINING AS GUEST?</label><br><br>
+          <input type="text" class="form-control" name="code" minlength="6" maxlength="6" id="code" placeholder="Enter 6-digit code" required oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');">
+          <button title="Join now!" style="margin-top: 20px" class="btn btn-success btn-success-custom" id="submit" onclick="validateForm()" type="button">JOIN</button>
+        </form>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a title="Author's LinkedIn" class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+  </body>
+</html>

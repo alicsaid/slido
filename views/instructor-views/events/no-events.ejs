@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/general.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="stylesheets/instructor.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+      .btn-success-custom {
+        background-color: #3dac3f;
+        color: white;
+        border: 1px solid #3dac3f;
+      }
+    </style>
+    <script>
+      $(document).ready(function(){
+        console.log(Math.floor(100000 + Math.random() * 900000));
+        const date_of_birth = '<%= date_of_birth %>';
+        const today = moment().format('YYYY-M-DD');
+
+        const day1 = '<%= moment(date_of_birth).date() %>'
+        const month1 = '<%= moment(date_of_birth).month() + 1 %>'
+        const date1 = month1 + "-" + day1;
+
+
+        const day2 = moment(today).date();
+        const month2 = moment(today).month() + 1;
+        const date2 = month2 + "-" + day2;
+
+        //console.info(date1, date2);
+
+        if (date1 === date2 && <%= fullUser.bday_shown === false %>) {
+          console.info('Happy birthday');
+          // Show the modal with 1-second delay
+          setTimeout(function(){ $(".BdayModal").modal("show"); }, 1000);
+        } else {
+          console.log("Not your birthday yet.");
+          //console.log(date_of_birth, moment().format('YYYY-MM-DD'));
+          // TODO: u suprotnom treba postaviti flag bday shown na false, tj. pozvati neku funkciju koja će to uraditi
+        }
+      });
+
+      function updayBdayShown() {
+        $.ajax({
+          url: "/instructor/instructors/updatebdayshown/",
+          type: 'POST',
+        }).done(function (data) {
+          //console.info(data)
+          $('#bdayModal').modal('hide');
+        });
+      }
+
+      function restrictFirstZero(e) {
+        if (e.srcElement.value.length === 0 && e.which === 48) {
+          e.preventDefault();
+          return false;
+        }
+      }
+
+      function validateForm() {
+        let x = document.forms["myForm"]["code"].value;
+        if (x.length !== 6) {
+          alert("Code must be 6 numbers long!");
+          return false;
+        }
+      }
+
+      function randomCode() {
+        const randomCode = Math.floor(100000 + Math.random() * 900000);
+        //console.info(randomCode);
+        let codeInput = document.querySelector('.thisCode');
+        codeInput.value = randomCode;
+      }
+
+      function copyToClipboard(code) {
+        // Get the text field
+        var copyText = code;
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText);
+
+        // Alert the copied text
+        alert("Copied the code: " + (copyText));
+      }
+    </script>
+    <style>
+      .alert-custom{
+        background-color: #f84c5e;
+        color:#fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a style="color: #115402; font-weight: bold" class="navbar-brand" href="">slido</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" href="http://localhost:3000/instructor">HOME</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/instructor/archived-events">ARCHIVED EVENTS</a>
+              </li>
+            </ul>
+            <span style="margin-right: 1rem;" class="nav-item em">
+              <strong><%= user %></strong>
+            </span>
+            <div class="btn-group dropstart">
+              <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/instructor/my-profile">
+                    <button title="Check account status?" id="" type="button" class="btn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-person" viewBox="0 0 20 20">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                      </svg> My profile
+                    </button>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <!-- Button trigger modal -->
+                    <button title="Check account status?" id="" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#ACCOUNT_status">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-patch-check" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                        <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+                      </svg> Account status
+                    </button>
+                  </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                  <form action="/instructor/logout" method="post" class="d-flex">
+                    <button style="margin: 0 0 0 3.4rem" class="btn btn-outline-primary btn-block-custom" type="submit">Log Out</button></a>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav> <!--Navbar -->
+      <div id="main">
+        <h2 class="title-head"><%= title.toUpperCase() %></h2><br>
+        <h4>List of upcoming events</h4>
+        <div >
+          <% if(messages.length > 0) { %>
+            <div class="alert alert-custom" style="margin-top: 1rem">
+                          <span aria-hidden="true" style="font-size:1.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+                          </span>
+              <strong><%= messages %></strong>
+            </div>
+          <% } %>
+        </div>
+        <!-- Button trigger modal -->
+        <button style="margin: 3rem 0 3rem 0" type="button" title="Create new event?" class="btn btn-success btn-success-custom" data-bs-toggle="modal" data-bs-target="#CREATE_event">
+          CREATE NEW EVENT
+        </button>
+          <div class="container-fluid cards">
+             <h3 class="text-secondary">No events created yet.</h3>
+             <h5 class="text-secondary">Create first one!</h5>
+          </div>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+  </body>
+</html>
+
+<!-- Modal CREATE EVENT -->
+<div class="modal fade" id="CREATE_event" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">CREATE NEW EVENT</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form style="padding: 2rem" name="myForm" onsubmit="return validateForm()" action="/instructor/event/create"
+              method="POST" enctype="multipart/form-data">
+          <label for="code" class="form-label">CODE</label>
+          <div class="mb-3 input-group flex-nowrap">
+            <input type="text" id="code" minlength="6" maxlength="6" class="form-control thisCode" name="code" required
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
+                   onkeydown="restrictFirstZero(event)"/>
+            <button title="Get random code?" type="button" onclick="randomCode()" class="input-group-text" id="addon-wrapping">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+                <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label">TITLE</label>
+            <input type="text" id="title" class="form-control" name="title" maxlength="30" required>
+          </div>
+          <div class="mb-3">
+            <label for="start_date" class="form-label">START DATE</label>
+            <input type="date" class="form-control" id="start_date" min="<%= new Date().toISOString().split('T')[0] %>"
+                   name="start_date" required>
+          </div>
+          <div class="mb-3">
+            <label for="end_date" class="form-label">END DATE</label>
+            <input type="date" class="form-control" id="end_date" min="<%= new Date().toISOString().split('T')[0] %>"
+                   name="end_date" required>
+          </div>
+          <div class="mb-3">
+            <label for="time" class="form-label">TIME</label>
+            <input type="time" class="form-control" id="time" name="time" required>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">DURATION</label>
+            <select name="duration" class="form-select" aria-label="Default select example" required>
+              <option value="" selected>Select duration</option>
+              <option value="30 mins">30 mins</option>
+              <option value="45 mins">45 mins</option>
+              <option value="1 hour">1 hour</option>
+              <option value="90 mins">90 mins</option>
+              <option value="2 hours">2 hours</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">REPETITION RULE</label>
+            <select name="repetition" class="form-select" aria-label="Default select example" required>
+              <option value="" selected>Select repetition rule</option>
+              <option value="One-time">One-time</option>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="cover" class="form-label">CHOOSE BACKGROUND PICTURE</label>
+            <input type="file" id="cover" class="form-control" name="cover" accept="image/png, image/jpeg">
+          </div>
+          <button style="margin-top: 1rem" title="Create new event?" type="submit" class="btn btn-success btn-success-custom">CREATE</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ACCOUNT STATUS -->
+<div class="modal fade" id="ACCOUNT_status" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">ACCOUNT STATUS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3>ACCOUNT STATUS</h3>
+        <h3 class="text-success">OK</h3>
+        <h6>Blocked 0 times.</h6>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal B-Day https://codepen.io/aristamademe/pen/mdKjyRo -->
+<div class="modal fade BdayModal" id="bdayModal" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" onclick="updayBdayShown()" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div style="background-color: rgba(255, 0, 0, 0.3);" class="modal-body">
+        <div class="birthdaycard">
+
+          <div class="cardfront">
+            <h3 class="happy">Happy Birthday!</h3>
+
+            <div class="balloons">
+
+              <div class="balloon1"></div>
+
+              <div class="balloon2"></div>
+
+              <div class="balloon3"></div>
+
+              <div class="balloon4"></div>
+
+            </div><!-- end balloons -->
+
+          </div><!-- end cardfront -->
+
+          <div class="cardinside">
+            <h3 class="back">HAPPY BIRTHDAY!</h3>
+            <p>Dear <%= fullUser.first_name %> <%= fullUser.last_name %>,</p>
+            <p>Happy Birthday! We hope your day is filled with lots of love and laughter! May all of your birthday wishes come true!</p>
+            <p class="name">slido team</p>
+          </div><!-- end cardinside -->
+
+        </div><!-- end birthdaycard -->
+
+      </div>
+    </div>
+  </div>
+</div>

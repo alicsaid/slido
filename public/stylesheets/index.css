@@ -1,0 +1,15 @@
+#main h1 {
+  margin-top: 6rem;
+}
+
+#main label, input {
+  margin-top: 6rem;
+  font-weight: bold;
+}
+
+#main input {
+  border: 1px solid black;
+  border-radius: .5rem;
+  font-weight: bold;
+}
+

@@ -1,0 +1,92 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/*body {*/
+/*  background: rgb(229, 39, 62);*/
+/*  background: linear-gradient(90deg, rgba(159, 27, 70, 0.62) 0%, rgba(192,233,255,1) 72%);*/
+/*}*/
+
+body {
+  background: rgb(235,235,235);
+  background: radial-gradient(circle, rgba(235,235,235,1) 26%, rgba(240,240,240,1) 62%);
+}
+
+/* email in navbar */
+.em:hover {
+  color: #c91717;
+  cursor: pointer;
+}
+
+/* titles */
+.title-head {
+  margin-top: 3rem;
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+#main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+table tr td {
+  cursor: pointer;
+}
+
+.btn-success-custom {
+  background-color: #3dac3f !important;
+  color: white !important;
+  border: 1px solid #3dac3f !important;
+}
+
+.btn-warning-custom {
+  background-color: #ff8e35 !important;
+  color: white !important;
+  border: 1px solid #ff8e35 !important;
+}
+
+.btn-danger-custom {
+  background-color: #ff5768 !important;
+  color: white !important;
+  border: 1px solid #ff5768 !important;
+}
+
+.btn-dark-custom {
+  background-color: #4d54e2 !important;
+  color: white !important;
+  border: 1px solid #4d54e2 !important;
+}
+
+.btn-block-custom {
+  background-color: #41d5e1 !important;
+  color: white !important;
+  border: 1px solid #41d5e1 !important;
+}
+
+.btn-block-custom:hover {
+  background-color: #248080 !important;
+  color: white !important;
+  border: 1px solid #248080 !important;
+}
+
+.clear {
+  clear: both;
+  height: 5.5rem;
+}
+
+footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}

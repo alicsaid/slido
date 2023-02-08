@@ -1,0 +1,290 @@
+#panel {
+  min-height: 45rem;
+  min-width: 40rem;
+  background-color: white;
+  border-radius: 0; /* 1rem */
+  margin-top: 2rem;
+  padding: 3rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+
+#filter-sort {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#sending-form {
+  min-height: 5rem;
+  flex: 0 0 5rem;
+  padding: 2rem 0 2rem 0;
+}
+
+#sending-form input, label {
+  min-height: 10rem;
+  line-height: normal;
+  font-size: larger;
+}
+
+#questions {
+  min-height: 40rem;
+  min-width: 39rem;
+  flex: 0 0 5rem;
+}
+
+#one-question {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#full-question {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+textarea {
+  border: none;
+  line-height: normal;
+}
+
+:root {
+  --hue: 223;
+  --white: hsl(var(--hue),10%,100%);
+  --lt-gray: hsl(var(--hue),10%,95%);
+  --gray1: hsl(var(--hue),10%,90%);
+  --gray2: hsl(var(--hue),10%,80%);
+  --gray7: hsl(var(--hue),10%,30%);
+  --gray9: hsl(var(--hue),10%,10%);
+  --primary: hsl(var(--hue),90%,55%);
+  --trans-dur: 0.3s;
+}
+
+/* Main styles */
+.fr {
+  animation: fade-slide-in 0.6s ease-out;
+  padding: 0 1.5em;
+  max-width: 20em;
+  margin: auto;
+}
+.fr__face {
+  --face-hue1: 60;
+  --face-hue2: 30;
+  background-image:
+          linear-gradient(
+                  135deg,
+                  hsl(var(--face-hue1),90%,55%),
+                  hsl(var(--face-hue2),90%,45%)
+          );
+  border-radius: 50%;
+  box-shadow: 0 0.5em 0.75em hsla(var(--face-hue2),90%,55%,0.3);
+  margin: 2rem auto 2em;
+  position: relative;
+  width: 3em;
+  height: 3em;
+}
+.fr__face-right-eye,
+.fr__face-left-eye,
+.fr__face-mouth-lower,
+.fr__face-mouth-upper {
+  position: absolute;
+  transition:
+          background-color var(--trans-dur),
+          box-shadow var(--trans-dur),
+          color var(--trans-dur);
+}
+.fr__face-right-eye,
+.fr__face-left-eye {
+  background-color: var(--white);
+  border-radius: 50%;
+  top: 0.75em;
+  width: 0.6em;
+  height: 0.6em;
+}
+.fr__face-right-eye {
+  --delay-right: 0s;
+  animation: right-eye 1s var(--delay-right) linear paused;
+  clip-path: polygon(0 75%,100% 0,100% 100%,0 100%);
+  left: 0.6em;
+}
+.fr__face-left-eye {
+  --delay-left: 0s;
+  animation: left-eye 1s var(--delay-left) linear paused;
+  clip-path: polygon(0 0,100% 75%,100% 100%,0 100%);
+  right: 0.6em;
+}
+.fr__face-mouth-lower,
+.fr__face-mouth-upper {
+  color: var(--white);
+  top: 1.75em;
+  left: 0.75em;
+  width: 1.5em;
+  height: 0.75em;
+}
+.fr__face-mouth-lower {
+  --delay-mouth-lower: 0s;
+  animation: mouth-lower 1s var(--delay-mouth-lower) linear paused;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 0.125em 0 inset;
+}
+.fr__face-mouth-upper {
+  --delay-mouth-upper: 0s;
+  animation: mouth-upper 1s var(--delay-mouth-upper) linear paused;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  box-shadow: 0 -0.125em 0 inset;
+}
+.fr__label {
+  min-height: 1rem !important;
+  display: block;
+  text-align: center;
+}
+.fr__input {
+  background-color: var(--gray1);
+  background-image: linear-gradient(hsl(var(--input-hue),90%,45%),hsl(var(--input-hue),90%,45%));
+  background-size: var(--percent) 100%;
+  background-repeat: no-repeat;
+  border-radius: 0.25em;
+  display: block;
+  margin: 0.5em auto;
+  margin-bottom: 5rem;
+  width: 100%;
+  max-width: 10em;
+  height: 0.5em;
+  transition: background-color var(--trans-dur);
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* WebKit */
+.fr__input::-webkit-slider-thumb {
+  background-color: var(--white);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 0.125em 0.5em hsl(0,0%,0%,0.3);
+  width: 1.5em;
+  height: 1.5em;
+  transition: background-color 0.15s linear;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.fr__input:focus::-webkit-slider-thumb,
+.fr__input::-webkit-slider-thumb:hover {
+  background-color: var(--lt-gray);
+}
+
+/* Firefox */
+.fr__input::-moz-range-thumb {
+  background-color: var(--white);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 0.125em 0.5em hsl(0,0%,0%,0.3);
+  width: 1.5em;
+  height: 1.5em;
+  transition: background-color 0.15s linear;
+}
+.fr__input:focus::-moz-range-thumb,
+.fr__input::-moz-range-thumb:hover {
+  background-color: var(--lt-gray);
+}
+
+
+/* Animations */
+@keyframes fade-slide-in {
+  from,
+  16.67% {
+    opacity: 0;
+    transform: translateY(25%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes right-eye {
+  from { clip-path: polygon(0 75%,100% 0,100% 100%,0 100%); }
+  50%, to { clip-path: polygon(0 0,100% 0,100% 100%,0 100%); }
+}
+@keyframes left-eye {
+  from { clip-path: polygon(0 0,100% 75%,100% 100%,0 100%); }
+  50%, to { clip-path: polygon(0 0,100% 0,100% 100%,0 100%); }
+}
+@keyframes mouth-lower {
+  from {
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    top: 1.75em;
+    height: 0.75em;
+    visibility: visible;
+  }
+  40% {
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    top: 1.95em;
+    height: 0.25em;
+    visibility: visible;
+  }
+  50%,
+  to {
+    border-radius: 0;
+    top: 2em;
+    height: 0.125em;
+    visibility: hidden;
+  }
+}
+@keyframes mouth-upper {
+  from,
+  50% {
+    border-radius: 0;
+    box-shadow: 0 -0.125em 0 inset;
+    top: 2em;
+    height: 0.125em;
+    visibility: hidden;
+  }
+  62.5% {
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    box-shadow: 0 -0.125em 0 inset;
+    top: 1.95em;
+    height: 0.25em;
+    visibility: visible;
+  }
+  75% {
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    box-shadow: 0 -0.125em 0 inset;
+    top: 1.825em;
+    height: 0.5em;
+    visibility: visible;
+  }
+  to {
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    box-shadow: 0 -0.8em 0 inset;
+    top: 1.75em;
+    height: 0.75em;
+    visibility: visible;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  #panel {
+    min-height: 45rem;
+    min-width: 10rem;
+    padding: 1rem;
+  }
+  #questions {
+    min-height: 40rem;
+    flex: 0 0 5rem;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  #questions {
+    min-height: 40rem;
+    min-width: 10rem;
+    flex: 0 0 5rem;
+  }
+  #filter-sort {
+    display: flex;
+    flex-direction: column;
+  }
+}

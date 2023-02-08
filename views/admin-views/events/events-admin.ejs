@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/general.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.js" integrity="sha512-nO7wgHUoWPYGCNriyGzcFwPSF+bPDOR+NvtOYy2wMcWkrnCNPKBcFEkU80XIN14UVja0Gdnff9EmydyLlOL7mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+      .alert-custom{
+        background-color: #f84c5e;
+        color:#fff;
+      }
+    </style>
+    <script>
+      function archiveEvent(code, i) {
+        $.ajax({
+          url: "/admin/archive-event",
+          type: 'POST',
+          data: {
+            code: code
+          },
+        }).done(function (data) {
+          $(`#row${i}`).remove();
+          window.location.reload();
+        });
+      }
+      function randomCode() {
+        const randomCode = Math.floor(100000 + Math.random() * 900000);
+        //console.info(randomCode);
+        let codeInput = document.querySelector('.thisCode');
+        codeInput.value = randomCode;
+      }
+    </script>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a style="color: #115402; font-weight: bold" class="navbar-brand" href="">slido</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin">HOME</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="http://localhost:3000/admin/events">EVENTS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/archived-events">ARCHIVED EVENTS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/instructors">INSTRUCTORS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/forbidden-words">FORBIDDEN WORDS</a>
+              </li>
+            </ul>
+            <span style="margin-right: 1rem;" class="nav-item em">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-person" viewBox="0 0 20 20">
+  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+              </svg>
+                <strong><%= user %></strong>
+            </span>
+            <form action="/admin/logout" method="post" class="d-flex">
+              <button class="btn btn-outline-primary btn-block-custom" type="submit">Log Out</button></a>
+            </form>
+          </div>
+        </div>
+      </nav> <!--Navbar -->
+      <div id="main">
+        <h2 class="title-head"><%= title.toUpperCase() %></h2><br>
+        <h4>List of upcoming events</h4>
+        <div >
+          <% if(messages.length > 0) { %>
+            <div class="alert alert-custom" style="margin-top: 1rem">
+                          <span aria-hidden="true" style="font-size:1.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                          </span>
+              <strong><%= messages %></strong>
+            </div>
+          <% } %>
+        </div>
+        <!-- Button trigger modal -->
+        <button style="margin: 3rem 0 3rem 0" type="button" title="Create new event?" class="btn btn-success btn-success-custom" data-bs-toggle="modal" data-bs-target="#CREATE_event">
+          CREATE NEW EVENT
+        </button>
+        <% if (events.length === 0) { %>
+          <div class="container-fluid cards">
+            <h3 class="text-secondary">No events created yet.</h3>
+            <h5 class="text-secondary">Create first one!</h5>
+          </div>
+        <% } else { %>
+        <div class="container-fluid table-responsive justify-content-center">
+          <table style="text-align: center; margin-bottom: 5rem; " class="table table-bordered table-hover align-middle">
+            <thead class="table-light align-middle">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">CODE</th>
+              <th scope="col" style="min-width: 10rem">TITLE</th>
+              <th scope="col" style="min-width: 7.5rem">START DATE</th>
+              <th scope="col" style="min-width: 7.5rem">END DATE</th>
+              <th scope="col">TIME</th>
+              <th scope="col">REPETITION</th>
+              <th scope="col">INSTRUCTOR</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">ACTION</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider table-light">
+            <%for (let i=0; i < events.length; i++) {%>
+              <tr id="row<%= i %>">
+                <td><%= [i+1] %>.</td>
+                <td><%= events[i].code %></td>
+                <td><%= events[i].title %></td>
+                <td><%= moment(events[i].start_date).format('DD-MMM-YYYY') %></td>
+                <td><%= moment(events[i].end_date).format('DD-MMM-YYYY') %></td>
+                <td><%= moment(events[i].time, 'hh:mm:ss').format('HH:mm') %></td>
+                <td><%= events[i].repetition %></td>
+                <td><%= events[i].email %></td>
+                <td>
+                  <% if(moment(events[i].start_date).isAfter(moment())) {%>
+                    <h6 class="text-danger">NOT STARTED</h6>
+                  <% } else if(moment(events[i].end_date).isSame(moment(), 'day')) {%>
+                    <h6 class="text-success">ACTIVE</h6>
+                  <% } else if(moment(events[i].end_date).isBefore(moment().subtract(1, 'days'))) {%>
+                    <h6 class="text-primary">FINISHED</h6>
+                  <% } else if(moment(events[i].start_date).isBefore(moment()) && moment(events[i].end_date).isAfter(moment())) {%>
+                    <h6 class="text-success">ACTIVE</h6>
+                  <% } %>
+                </td>
+                <td style="display: flex; flex-direction: row;">
+                  <a title="See questions and statistics?" type="button" class="btn btn-success btn-success-custom btn-sm m-2" href="http://localhost:3000/admin/event/<%= events[i].code %>">
+                    VIEW
+                  </a>
+                  <% if (moment(events[i].end_date).isBefore(moment().subtract(1, 'days'))) { %>
+                    <button onclick="archiveEvent('<%= events[i].code %>', <%= i %>)" title="Archive event?" id="<%= events[i].code %>" type="button" class="btn btn-dark btn-dark-custom btn-sm m-2">
+                      ARCHIVE
+                    </button>
+                  <% } else { %>
+                    <!-- Button trigger modal -->
+                    <button style="min-width: 5rem" title="Edit event?" id="<%= events[i].code %>" type="button" class="btn btn-warning btn-warning-custom btn-sm m-2" data-bs-toggle="modal" data-bs-target="#EDIT_event<%= events[i].code %>">
+                      EDIT
+                    </button>
+                  <% }%>
+                  <!-- Button trigger modal -->
+                  <button type="button" title="Delete event?" class="btn btn-danger btn-sm btn-danger-custom m-2" data-bs-toggle="modal" data-bs-target="#DELETE_event<%= events[i].code %>">
+                    DELETE
+                  </button>
+              </tr>
+            <%}%>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+        <% if (totalPages > 1) { %>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= currentPage-1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+              <% } %>
+              <% for (var i = 1; i <= totalPages; i++) { %>
+                <% if (i >= currentPage - 2 && i <= currentPage + 2 && i <= totalPages) { %>
+                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+              <% } %>
+              <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= Number(currentPage) + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        <% } %>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+    <script>
+      function validateForm() {
+        let x = document.forms["myForm"]["code"].value;
+        if (x.length !== 6) {
+          alert("Code must be 6 numbers long!");
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+<!-- Modal CREATE EVENT -->
+<div class="modal fade" id="CREATE_event" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">CREATE NEW EVENT</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form style="padding: 2rem" name="myForm" onsubmit="return validateForm()" action="/admin/event/create"
+              method="POST" enctype="multipart/form-data">
+          <label for="code" class="form-label">CODE</label>
+          <div class="mb-3 input-group flex-nowrap">
+            <input type="text" id="code" minlength="6" maxlength="6" class="form-control thisCode" name="code" required
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
+                   onkeydown="restrictFirstZero(event)"/>
+            <button title="Get random code?" type="button" onclick="randomCode()" class="input-group-text" id="addon-wrapping">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+                <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label">TITLE</label>
+            <input type="text" id="title" class="form-control" name="title" maxlength="30" required>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">START DATE</label>
+            <input type="date" class="form-control" id="start_date" min="<%= new Date().toISOString().split('T')[0] %>"
+                   name="date" required>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">END DATE</label>
+            <input type="date" class="form-control" id="end_date" min="<%= new Date().toISOString().split('T')[0] %>"
+                   name="end_date" required>
+          </div>
+          <div class="mb-3">
+            <label for="time" class="form-label">TIME</label>
+            <input type="time" class="form-control" id="time" name="time" required>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">DURATION</label>
+            <select name="duration" class="form-select" aria-label="Default select example" required>
+              <option value="" selected>Select duration</option>
+              <option value="30 mins">30 mins</option>
+              <option value="45 mins">45 mins</option>
+              <option value="1 hour">1 hour</option>
+              <option value="90 mins">90 mins</option>
+              <option value="2 hours">2 hours</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">REPETITION RULE</label>
+            <select name="repetition" class="form-select" aria-label="Default select example" required>
+              <option value="" selected>Select repetition rule</option>
+              <option value="One-time">One-time</option>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">INSTRUCTOR</label>
+            <select name="instructor" class="form-select" aria-label="Default select example" required>
+                <option value="" selected>Select repetition rule</option>
+              <% for(let i = 0; i < emails.length; i++) { %>
+                <option value="<%= ids[i] %>"><%= emails[i] %></option>
+              <% } %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="cover" class="form-label">CHOOSE BACKGROUND PICTURE</label>
+            <input type="file" id="cover" class="form-control" name="cover" accept="image/png, image/jpeg">
+          </div>
+          <button style="margin-top: 1rem" title="Create new event?" type="submit" class="btn btn-success btn-success-custom">CREATE</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% for (let i = 0; i < events.length; i++) { %>
+  <!-- Modal EDIT EVENT -->
+  <div class="modal fade" id="EDIT_event<%= events[i].code %>" data-bs-backdrop="static" data-bs-keyboard="false"
+       tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">EDIT EVENT</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form style="padding: 2rem" name="myForm2"
+                action="/admin/event/<%= events[i].code %>/edit" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <!--https://www.techiedelight.com/restrict-html-input-text-box-to-allow-only-numeric-values/-->
+              <label for="code" class="form-label">CODE</label>
+              <input type="text" id="code" value="<%= events[i].code %>" minlength="6" maxlength="6" class="form-control" name="code" required
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
+                     onkeypress="restrictFirstZero(event)"/>
+            </div>
+            <div class="mb-3">
+              <label for="title" class="form-label">TITLE</label>
+              <input type="text" id="title" value="<%= events[i].title %>" class="form-control" name="title" maxlength="30" required>
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">START DATE</label>
+              <input type="date" class="form-control" id="start_date" value="<%= moment(events[i].start_date).format('YYYY-MM-DD') %>"
+                     name="start_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">END DATE</label>
+              <input type="date" class="form-control" id="end_date" value="<%= moment(events[i].end_date).format('YYYY-MM-DD') %>"
+                     name="end_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="time" class="form-label">TIME</label>
+              <input type="time" class="form-control" id="time" value="<%= events[i].time %>" name="time" required>
+            </div>
+            <div class="mb-3">
+              <label style="margin-top: 5px" class="form-label">DURATION</label>
+              <select name="duration" class="form-select" aria-label="Default select example" required>
+                <option value="<%= events[i].duration %>" selected><%= events[i].duration %></option>
+                <option value="30 mins">30 mins</option>
+                <option value="45 mins">45 mins</option>
+                <option value="1 hour">1 hour</option>
+                <option value="90 mins">90 mins</option>
+                <option value="2 hours">2 hours</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label style="margin-top: 5px" class="form-label">REPETITION RULE</label>
+              <select name="repetition" class="form-select" aria-label="Default select example" required>
+                <option value="<%= events[i].repetition %>" selected><%= events[i].repetition %></option>
+                <option value="One-time">One-time</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label style="margin-top: 5px" class="form-label">INSTRUCTOR</label>
+              <select name="instructor" class="form-select" aria-label="Default select example" required>
+                <option value="<%= events[i].instructor_id %>" selected><%= events[i].email %></option>
+                <% for(let i = 0; i < emails.length; i++) { %>
+                  <option value="<%= ids[i] %>"><%= emails[i] %></option>
+                <% } %>
+              </select>
+            </div>
+            <button style="margin-top: 1rem" title="Edit event?" type="submit" class="btn btn-success btn-success-custom">SAVE</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal DELETE EVENT -->
+  <div class="modal fade" id="DELETE_event<%= events[i].code %>" data-bs-backdrop="static"
+       data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">DELETE EVENT</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/event/<%= events[i].code %>/delete" method="get">
+            <div>
+              <h5>Confirm you want to delete this event!</h5><br>
+              <a href="http://localhost:3000/admin/event/<%= events[i].code %>/delete">
+                <button type="button" class="btn btn-danger btn-danger-custom">
+                  DELETE
+                </button>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>

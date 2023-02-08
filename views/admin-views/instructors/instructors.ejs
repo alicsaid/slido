@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/general.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+    <style>
+      .alert-custom{
+        background-color: #f84c5e;
+        color:#fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a style="color: #115402; font-weight: bold" class="navbar-brand" href="">slido</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:3000/admin">HOME</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:3000/admin/events">EVENTS</a>
+                </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/archived-events">ARCHIVED EVENTS</a>
+              </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="http://localhost:3000/admin/instructors">INSTRUCTORS</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:3000/admin/forbidden-words">FORBIDDEN WORDS</a>
+                </li>
+            </ul>
+            <span style="margin-right: 1rem;" class="nav-item em">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-person" viewBox="0 0 20 20">
+  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+              </svg>
+                <strong><%= user %></strong>
+            </span>
+            <form action="/admin/logout" method="post" class="d-flex">
+              <button class="btn btn-outline-primary btn-block-custom" type="submit">Log Out</button></a>
+            </form>
+          </div>
+        </div>
+      </nav> <!--Navbar -->
+      <div id="main">
+        <h2 class="title-head"><%= title.toUpperCase() %> </h2><br>
+        <h4>List of registered instructors</h4>
+        <% if(messages.length > 0) { %>
+            <div class="alert alert-custom" style="margin-top: 1rem">
+                          <span aria-hidden="true" style="font-size:1.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+                          </span>
+              <strong><%= messages %></strong>
+            </div>
+        <% } %>
+        <!-- Button trigger modal -->
+        <button style="margin: 3rem 0 4rem 0" type="button" class="btn btn-success btn-success-custom" data-bs-toggle="modal" data-bs-target="#CREATE_instructor">
+          CREATE NEW INSTRUCTOR
+        </button>
+        <% if (instructors.length === 0) { %>
+          <div class="container-fluid cards">
+            <h3 class="text-secondary">No events created yet.</h3>
+            <h5 class="text-secondary">Create first one!</h5>
+          </div>
+        <% } else {%>
+        <div class="container-md table-responsive justify-content-center">
+          <table style="text-align: center; margin-bottom: 5rem;" class="table table-bordered table-hover align-middle">
+            <thead class="table-light align-middle">
+              <tr>
+                <th scope="col">#</th>
+                <th style="min-width: 11rem" scope="col">FULL NAME</th>
+                <th style="min-width: 9rem" scope="col">DATE OF BIRTH</th>
+                <th scope="col">USERNAME</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">STATUS</th>
+                <th scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider table-light">
+            <%for (let i=0; i<instructors.length; i++) {%>
+              <tr>
+                <td><%= [i+1] %>.</td>
+                <td><%= instructors[i].first_name %> <%= instructors[i].last_name %></td>
+                <td><%= moment(instructors[i].date_of_birth).format('DD-MMM-YYYY') %></td>
+                <td><%= instructors[i].username %></td>
+                <td><%= instructors[i].email %></td>
+                <% if(instructors[i].blocked === true) { %>
+                  <td class="text-danger">
+                      BLOCKED
+                  </td>
+                  <% } else { %>
+                  <td class="text-success">
+                    OK
+                  </td>
+                  <% } %>
+                <td style="display: flex; flex-direction: row; justify-content: space-around; padding: 1rem; gap: 1rem">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-sm btn-warning btn-warning-custom" data-bs-toggle="modal" data-bs-target="#EDIT_instructor<%= instructors[i].instructor_id %>">
+                    EDIT
+                  </button>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-sm btn-danger btn-danger-custom" data-bs-toggle="modal" data-bs-target="#DELETE_instructor<%= instructors[i].instructor_id %>">
+                    DELETE
+                  </button>
+                  <% if(instructors[i].blocked !== true) { %>
+                  <!-- Button trigger modal -->
+                  <button style="min-width: 6rem" type="button" class="btn btn-primary btn-sm btn-block-custom" data-bs-toggle="modal" data-bs-target="#BLOCK_instructor<%= instructors[i].instructor_id %>">
+                    BLOCK
+                  </button>
+                  <% } else { %>
+                    <!-- Button trigger modal -->
+                    <button style="min-width: 6rem" type="button" class="btn btn-dark btn-sm btn-dark-custom" data-bs-toggle="modal" data-bs-target="#UNBLOCK_instructor<%= instructors[i].instructor_id %>">
+                      UNBLOCK
+                    </button>
+                  <% }%>
+              </tr>
+            <%}%>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+        <% if (totalPages > 1) { %>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= currentPage-1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+              <% } %>
+              <% for (var i = 1; i <= totalPages; i++) { %>
+                <% if (i >= currentPage - 2 && i <= currentPage + 2 && i <= totalPages) { %>
+                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+              <% } %>
+              <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= Number(currentPage) + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        <% } %>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+    <script>
+      function toggleVisibility() {
+        var x1 = document.getElementById('password');
+
+        if (x1.type === "password") {
+          x1.type = "text";
+        } else {
+          x1.type = "password";
+        }
+      }
+      function toggleVisibilityEDIT() {
+        var x1 = document.getElementById('password2');
+
+        if (x1.type === "password") {
+          x1.type = "text";
+        } else {
+          x1.type = "password";
+        }
+      }
+    </script>
+
+  </body>
+</html>
+
+<!-- CREATE NEW INSTRUCTOR -->
+<div class="modal fade" id="CREATE_instructor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">CREATE NEW INSTRUCTOR</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/instructors/create" method="post">
+          <div class="mb-3">
+            <label style="margin-top: 30px" for="first_name" class="form-label">First name</label>
+            <input style="width: 70%; margin: auto" type="text" class="form-control" name="first_name">
+          </div>
+          <div class="mb-3">
+            <label for="last_name" class="form-label">Last name</label>
+            <input style="width: 70%; margin: auto" type="text" class="form-control" name="last_name">
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input style="width: 70%; margin: auto" type="text" id="username" class="form-control" name="username">
+          </div>
+          <div class="mb-3">
+            <label for="date_of_birth" class="form-label">Date of birth</label>
+            <input style="width: 70%; margin: auto" type="date" class="form-control" name="date_of_birth">
+          </div>
+          <div style="margin: auto; width: 70%" class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <select class="form-select" name="country" id="country">
+              <option value="">Select a country</option>
+              <% countries.forEach(function(countries) { %>
+                <option value="<%= countries.id %>">
+                  <%= countries.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">Email</label>
+            <input style="width: 70%; margin: auto" type="email" class="form-control" name="email">
+          </div>
+          <div class="mb-3">
+            <label style="margin-top: 5px" class="form-label">Password</label>
+            <input style="width: 70%; margin: auto" type="password" class="form-control" id="password" name="password">
+          </div>
+          <div style="margin-bottom: 20px" class="form">
+            <input class="form-check-input" onclick="toggleVisibility()" type="checkbox" id="chk">
+            <label for="chk">Show password</label>
+          </div>
+          <button type="submit" class="btn btn-success btn-success-custom">CREATE</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% for (let i = 0; i<instructors.length; i++) {%>
+
+  <!-- EDIT INSTRUCTOR -->
+  <div class="modal fade" id="EDIT_instructor<%= instructors[i].instructor_id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">EDIT INSTRUCTOR</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/instructors/<%= instructors[i].instructor_id %>/edit" method="POST">
+            <div class="mb-3">
+              <label style="margin-top: 30px" for="first_name" class="form-label">First name</label>
+              <input style="width: 70%; margin: auto" type="text" value="<%= instructors[i].first_name %>" class="form-control" name="first_name">
+            </div>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Last name</label>
+              <input style="width: 70%; margin: auto" type="text" value="<%= instructors[i].last_name %>" class="form-control" name="last_name">
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input style="width: 70%; margin: auto" type="text" id="username" value="<%= instructors[i].username %>" class="form-control" name="username">
+            </div>
+            <div class="mb-3">
+              <label for="date_of_birth" class="form-label">Date of birth</label>
+              <input style="width: 70%; margin: auto;" readonly value="<%= moment(instructors[i].date_of_birth).format('YYYY-MM-DD') %>" type="date" class="form-control" name="date_of_birth">
+            </div>
+            <div style="width: 70%; margin: auto" class="mb-3 w-75">
+              <label for="country" class="form-label">Country</label>
+              <select class="form-select" name="country" id="country">
+                <option value="<%= instructors[i].countryid %>"><%= instructors[i].countryname %></option>
+                <% countries.forEach(function(countries) { %>
+                  <option value="<%= countries.id %>">
+                    <%= countries.name %>
+                  </option>
+                <% }); %>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label style="margin-top: 5px" class="form-label">Email</label>
+              <input style="width: 70%; margin: auto" type="email" class="form-control" value="<%= instructors[i].email %>" name="email">
+            </div>
+            <div class="mb-3">
+              <label style="margin-top: 5px" class="form-label">Password</label>
+              <input style="width: 70%; margin: auto" type="password" class="form-control" required id="password2" name="password">
+            </div>
+            <div style="margin-bottom: 20px" class="form">
+              <input class="form-check-input" onclick="toggleVisibilityEDIT()" type="checkbox" id="chk">
+              <label for="chk">Show password</label>
+            </div>
+            <button type="submit" class="btn btn-success btn-success-custom">SAVE</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE INSTRUCTOR -->
+  <div class="modal fade" id="DELETE_instructor<%= instructors[i].instructor_id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">DELETE WORD</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/instructors/<%= instructors[i].instructor_id %>/delete" method="get">
+            <div>
+              <h5>Confirm you want to delete this instructor!</h5><br>
+              <a href="http://localhost:3000/admin/instructors/<%= instructors[i].instructor_id %>/delete"><button type="button" class="btn btn-danger btn-danger-custom">
+                  DELETE
+                </button></a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK INSTRUCTOR -->
+  <div class="modal fade" id="BLOCK_instructor<%= instructors[i].instructor_id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">BLOCK <%= instructors[i].email %></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4>Confirm you want to block <%= instructors[i].email %>!</h4>
+          <form style="font-weight: bold" action="/admin/instructors/<%= instructors[i].instructor_id %>/block" method="post">
+            <div class="form-check">
+              <input class="form-input" type="radio" value="15" name="days" id="flexRadioDefault1">
+              <label class="form-label" for="flexRadioDefault1">
+                15 DAYS
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-input" type="radio" value="30" name="days" id="flexRadioDefault2" required>
+              <label class="form-label" for="flexRadioDefault2">
+                30 DAYS
+              </label>
+            </div>
+            <div style="margin-top: 30px">
+              <button type="submit" class="btn btn-primary btn-block-custom">BLOCK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNBLOCK INSTRUCTOR -->
+  <div class="modal fade" id="UNBLOCK_instructor<%= instructors[i].instructor_id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">UNBLOCK <%= instructors[i].email %></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form style="font-weight: bold" action="/admin/instructors/<%= instructors[i].instructor_id %>/unblock" method="post">
+            <h4>Confirm you want to unblock <%= instructors[i].email %>!</h4>
+            <div style="margin-top: 30px">
+              <button type="submit" class="btn btn-dark btn-dark-custom">UNBLOCK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<%}%>

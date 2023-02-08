@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/general.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.js" integrity="sha512-nO7wgHUoWPYGCNriyGzcFwPSF+bPDOR+NvtOYy2wMcWkrnCNPKBcFEkU80XIN14UVja0Gdnff9EmydyLlOL7mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <style>
+
+          .btn-block-custom {
+              background-color: #41d5e1;
+              color: white;
+              border: 1px solid #41d5e1;
+          }
+      </style>
+  </head>
+  <body>
+    <div>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a style="color: #115402; font-weight: bold" class="navbar-brand" href="">slido</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:3000/admin">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:3000/admin/events">EVENTS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="http://localhost:3000/admin/archived-events">ARCHIVED EVENTS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:3000/admin/instructors">INSTRUCTORS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:3000/admin/forbidden-words">FORBIDDEN WORDS</a>
+                        </li>
+                    </ul>
+                    <span style="margin-right: 1rem;" class="nav-item em">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-person" viewBox="0 0 20 20">
+  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+              </svg>
+                <strong><%= user %></strong>
+            </span>
+                    <form action="/admin/logout" method="post" class="d-flex">
+                        <button class="btn btn-outline-primary btn-block-custom" type="submit">Log Out</button></a>
+                    </form>
+                </div>
+            </div>
+        </nav> <!--Navbar -->
+      <div id="main">
+          <h2 class="title-head"><%= title.toUpperCase() %></h2>
+          <h4 style="margin-top: 1rem;">List of archived events</h4>
+          <div id="panels">
+            <div id="panel1">
+                <% if (events.length === 0) { %>
+                    <div class="container-fluid cards">
+                        <h3 class="text-secondary">No events created yet.</h3>
+                        <h5 class="text-secondary">Create first one!</h5>
+                    </div>
+                <% } else { %>
+                <div class="container-fluid table-responsive justify-content-center">
+                    <table style="text-align: center; margin-bottom: 5rem; overflow-y: scroll" class="table table-bordered table-hover align-middle">
+                        <thead class="table-light align-middle">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">CODE</th>
+                            <th scope="col" style="min-width: 10rem">TITLE</th>
+                            <th scope="col" style="min-width: 8.5rem">START DATE</th>
+                            <th scope="col" style="min-width: 8.5rem">END DATE</th>
+                            <th scope="col">TIME</th>
+                            <th scope="col">DURATION</th>
+                            <th scope="col">REPETITION</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider table-light">
+                        <%for (let i=0; i < events.length; i++) {%>
+                            <tr>
+                                <td><%= [i+1] %>.</td>
+                                <td><%= events[i].code %></td>
+                                <td><%= events[i].title %></td>
+                                <td><%= moment(events[i].start_date).format('DD-MMM-YYYY') %></td>
+                                <td><%= moment(events[i].end_date).format('DD-MMM-YYYY') %></td>
+                                <td><%= moment(events[i].time, 'hh:mm:ss').format('HH:mm') %></td>
+                                <td><%= events[i].duration %></td>
+                                <td><%= events[i].repetition %></td>
+                            </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+          </div>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+  </body>
+</html>
+
+<!-- Modal ACCOUNT STATUS -->
+<div class="modal fade" id="ACCOUNT_status" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">ACCOUNT STATUS</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>ACCOUNT STATUS</h3>
+                <h3 class="text-success">OK</h3>
+                <h6>Blocked 0 times.</h6>
+            </div>
+        </div>
+    </div>
+</div>

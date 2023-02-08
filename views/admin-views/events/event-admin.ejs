@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= details.title %></title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/general.css"> <!--CSS file-->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css"> <!--CSS file-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> <!--Bootstrap CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> <!--Google fonts-->
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"> <!--Favicon-->
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> <!--Favicon-->
+    <% if(details.bg_image) { %>
+      <style>
+        body {
+          background-image: url("<%= details.bg_image %>");
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: right top;
+          background-attachment: fixed;
+        }
+        .title-head, .date {
+          background-color: white;
+          padding: .5rem;
+        }
+      </style>
+    <%}%>
+    <style>
+
+      .btn-block-custom {
+        background-color: #41d5e1;
+        color: white;
+        border: 1px solid #41d5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a style="color: #115402; font-weight: bold" class="navbar-brand" href="">slido</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin">HOME</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/events">EVENTS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/archived-events">ARCHIVED EVENTS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/instructors">INSTRUCTORS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:3000/admin/forbidden-words">FORBIDDEN WORDS</a>
+              </li>
+            </ul>
+            <span style="margin-right: 1rem;" class="nav-item em">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-person" viewBox="0 0 20 20">
+  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+              </svg>
+                <strong><%= user %></strong>
+            </span>
+            <form action="/admin/logout" method="post" class="d-flex">
+              <button class="btn btn-outline-primary btn-block-custom" type="submit">Log Out</button></a>
+            </form>
+          </div>
+        </div>
+      </nav> <!--Navbar -->
+      <div id="main">
+        <h2 class="title-head"><%= details.title %></h2>
+        <h5 class="text-secondary date"><%= moment(details.start_date).format('DD-MMM-YYYY') %> - <%= moment(details.end_date).format('DD-MMM-YYYY') %></h5>
+        <div id="panels">
+          <div id="panel1">
+            <h1 class="text-success fw-bold">#<%= details.code %></h1>
+            <hr>
+            <div>
+              <div id="statistics">
+                <h3>Statistics</h3>
+                <div id="stats">
+                  <p>Posted Questions</p>
+                  <span class="text-success fw-bold"><%= questions.length %></span>
+                  <p>Answered Questions</p>
+                  <span class="text-success fw-bold"><%= answered_questions.length %></span>
+                </div>
+              </div>
+              <hr>
+              <div id="event_info">
+                <h5>EVENT INFO</h5>
+                  <p>Code: <%= details.code %></p>
+                  <p>Title: <%= details.title %></p>
+                  <p>Start date: <%= moment(details.start_date).format('DD-MMM-YYYY') %></p>
+                  <p>End date: <%= moment(details.end_date).format('DD-MMM-YYYY') %></p>
+                  <p>Time: <%= moment(details.time, 'hh:mm:ss').format('hh:mm a') %></p>
+                  <p>Repetition: <%= details.repetition %></p>
+                  <p>Instructor: <%= details.email %></p>
+              </div>
+              <hr>
+              <div id="actions3">
+                <!-- Button trigger modal -->
+                <button  title="View answered questions?" id="" type="button" class="btn btn-primary btn-block-custom position-relative" data-bs-toggle="modal" data-bs-target="#ANSWERED_questions">
+                  ANSWERED QUESTIONS
+                  <span class="badge text-bg-secondary"><%= answered_questions.length %></span>
+                </button>
+                <!-- Button trigger modal -->
+                <button style="margin-top: .5rem" title="View archived questions?" id="" type="button" class="btn btn-primary btn-block-custom position-relative" data-bs-toggle="modal" data-bs-target="#ARCHIVED_questions">
+                  ARCHIVED QUESTIONS
+                  <span class="badge text-bg-secondary"><%= archived_questions.length %></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="panel2">
+            <div id="questions_head">
+              <div class="input-group flex-nowrap" style="width: 70%">
+                <span class="input-group-text" id="addon-wrapping">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4682B4" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+                  </svg>
+                </span>
+                <input onkeyup="searchQuestions()" type="search" id="searchbox" class="form-control search" placeholder="Search questions.." title="Type in a question" aria-label="Search" aria-describedby="addon-wrapping">
+              </div>
+              <div>
+                <div class="btn-group" role="group">
+                  <button title="Sort questions?" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4682B4" class="bi bi-sort-down" viewBox="0 0 16 16">
+                      <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+                    </svg>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-item">SORT BY</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item" href="http://localhost:3000/admin/event/<%= details.code %>/sort/likes">LIKES
+                        <svg style="float:right;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4682B4" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                          <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+                        </svg>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="http://localhost:3000/admin/event/<%= details.code %>/sort/recent">RECENT
+                        <svg style="float:right;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4682B4" class="bi bi-clock-history" viewBox="0 0 16 16">
+                          <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                          <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                          <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div id="questions">
+              <% if(questions.length === 0) {%>
+                <div class="one_question" id="one_question">
+                  <div id="q"></div>
+                  <div style="margin-top: 4rem">
+                    <h4 class="text-secondary">There are no questions asked yet.</h4>
+                  </div>
+                </div>
+              <% } else { %>
+                  <ul id="myUL" style="list-style-type: none;">
+                    <% if(questions.length === 0) { %>
+                      <div id="no-questions">
+                        <hr>
+                        <div id="q"></div>
+                        <div style="margin-top: 4rem">
+                          <h4 class="text-secondary">There are no questions asked yet.</h4>
+                          <h2 class="text-secondary">Ask the first one!</h2>
+                        </div>
+                      </div>
+                    <% } else { %>
+                      <% for (let i = 0; i < questions.length; i++) { %>
+                        <li id="<%= questions[i].question_id %>">
+                          <hr>
+                          <div id="full-question">
+                            <div id="one-question">
+                              <textarea id="question-textarea" style="resize: none;" cols="50" rows="2" readonly><%= questions[i].q_text %></textarea>
+                              <span><%= questions[i].timestamp %></span>
+                            </div>
+                            <div>
+                              <button id="like-button<%= questions[i].question_id %>" onclick="likeQuestion('<%= questions[i].question_id %>')" class="btn btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4682B4" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                                  <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+                                </svg>
+                              </button>
+                              <span id="likes<%= questions[i].question_id %>"><%= questions[i].likes %></span>
+                            </div>
+                          </div>
+                        </li>
+                      <% } %>
+                    <% } %>
+                  </ul>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-light">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://www.linkedin.com/in/said-ali%C4%87-03471518b/" target="_blank">ALIC SAID</a>
+        </div>
+        <!-- Copyright -->
+      </footer> <!--Footer-->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> <!--Bootstrap JS-->
+    <script>
+      // https://www.w3schools.com/howto/howto_js_filter_lists.asp
+      function searchQuestions() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('searchbox');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+          a = li[i].getElementsByTagName("textarea")[0];
+          txtValue = a.textContent || a.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+          } else {
+            li[i].style.display = "none";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+<% for (let i = 0; i < questions.length ; i++) { %>
+  <!-- DELETE QUESTION -->
+  <div class="modal fade" id="DELETE_question" data-bs-backdrop="static"
+       data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">DELETE QUESTION</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <form action="" method="get">
+            <div>
+              <h5>Would you like to permanently delete this question?</h5><br>
+              <a href="http://localhost:3000/instructor/event/questions/<%= questions[i].question_id %>/delete">
+                <button type="button" class="btn btn-danger">
+                  DELETE
+                </button>
+              </a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- ARCHIVED QUESTIONS -->
+<div class="modal fade modal-lg" id="ARCHIVED_questions" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">ARCHIVED QUESTIONS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>QUESTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(let i = 0; i < archived_questions.length ; i++) { %>
+              <tr>
+                <td><%= i+1 %>.</td>
+                <td><%= archived_questions[i].q_text %></td>
+              </tr>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANSWERED QUESTIONS -->
+<div class="modal fade modal-lg" id="ANSWERED_questions" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">ANSWERED QUESTIONS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>QUESTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(let i = 0; i < answered_questions.length ; i++) { %>
+              <tr>
+                <td><%= i+1 %>.</td>
+                <td><%= answered_questions[i].q_text %></td>
+              </tr>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
