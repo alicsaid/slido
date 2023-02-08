@@ -1,4 +1,5 @@
 # Slido
+
 Aplikacija za interakciju publike tokom predavanja, konferencija i drugih sličnih događaja. 
 
 Projekat iz predmeta Odabrana poglavlja informacionih tehnologija.
